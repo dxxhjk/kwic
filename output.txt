@@ -1,0 +1,5 @@
+am pad i
+hello world
+i am pad
+pad i am
+world hello
