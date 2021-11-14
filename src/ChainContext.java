@@ -8,11 +8,13 @@ public class ChainContext {
     private boolean inputFromSocket;
     private int port = 4000;
 
-    private String inputFile = "input.txt";
-    private String outputFile = "output.txt";
+    private String inputFile;
+    private String outputFile;
 
-    public ChainContext(boolean inputFromSocket) {
+    public ChainContext(boolean inputFromSocket, String[] args) {
         this.inputFromSocket = inputFromSocket;
+        this.inputFile = args[0] + "/" + args[1];
+        this.outputFile = args[2] + "/" + args[3];
     }
 
     public int getPort() {
