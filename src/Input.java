@@ -1,5 +1,6 @@
 import java.io.*;
 import java.net.InetAddress;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -17,27 +18,30 @@ public class Input implements ChainApi {
         if (context.isInputFromSocket()) {
 
             try {
-                InetAddress ipAddress = InetAddress.getByAddress(context.getIpAddressTemp());
-                Socket socket = new Socket(ipAddress, context.getPort());
+                ServerSocket serverSocket = new ServerSocket(context.getPort());
+                Socket socket = serverSocket.accept();
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                while(!Objects.equals(readLine, "##")){
+                while (!Objects.equals(readLine, "##")) {
+                    while (!bufferedReader.ready()) {}
                     readLine = bufferedReader.readLine();
                     System.out.println("input: " + readLine);
-                    stringList.add(readLine);
+                    if (!Objects.equals(readLine, "##")) {
+                        stringList.add(readLine);
+                    }
                 }
                 bufferedReader.close();
                 socket.close();
             } catch (UnknownHostException e) {
                 System.out.println("UnknownHostException: " + e);
             } catch (IOException e) {
-                System.out.println("IOException: " + e);
+                e.printStackTrace();
             }
         } else {
 
             try {
                 FileReader fileReader = new FileReader(context.getInputFile());
-                BufferedReader bufferedReader =  new BufferedReader(fileReader);
-                while(bufferedReader.ready()){
+                BufferedReader bufferedReader = new BufferedReader(fileReader);
+                while (bufferedReader.ready()){
                     readLine = bufferedReader.readLine();
                     System.out.println("input: " + readLine);
                     stringList.add(readLine);
